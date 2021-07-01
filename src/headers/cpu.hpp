@@ -20,6 +20,7 @@ class CPU{
     std::uint16_t interpretInstr(uint8_t opCode, uint8_t arg);
   public:
     CPU();
+    std::uint16_t* romdump();
     std::uint16_t getAccum();
     std::uint16_t run(uint16_t instruction);
     void exec(); //this runs ROMcode, not the same as CPU::run()

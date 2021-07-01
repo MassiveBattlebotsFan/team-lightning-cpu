@@ -145,6 +145,7 @@ bool CPU::load(char fname[1024]){
       }
       progMem[this->progAddr] = (uint16_t)strtol(buffer, NULL, 16);
     }
+    this->progAddr = i;
     return true;
   }
   else{
@@ -171,4 +172,8 @@ void CPU::in(){
 
 void CPU::out(){
   std::cout.put(this->accumulator);
+}
+
+uint16_t* CPU::romdump(){
+  return this->progMem;
 }

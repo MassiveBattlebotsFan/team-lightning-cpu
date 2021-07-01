@@ -67,6 +67,16 @@ int menu(){
       cpu.exec();
       cout << "Finished execution of ROM." << endl;
     }
+    if(strcmp(input, "rom")==0){
+      uint16_t* pMem = cpu.romdump();
+      for(uint16_t i = 0; i < 0x10000; i++){
+        if(pMem[i]==0x0000){
+          cout << "0000" << endl;
+          break;
+        }
+        cout << std::setfill('0') << std::setw(4) << pMem[i] << endl;
+      }
+    }
   }
   free(input);
   return 0;
