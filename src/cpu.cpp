@@ -136,13 +136,14 @@ bool CPU::load(char fname[1024]){
   char buffer[0x10000];
   ifile.open(fname);
   if(ifile.good()){
-    for(uint16_t i = 0; i < 0x10000; i++){
+    uint16_t i = this->progAddr;
+    for(this->progAddr; this->progAddr < 0x10000; this->progAddr++){
       ifile.getline(buffer, 0xFFF, ';');
       std::cerr << buffer << std::endl;
       if(ifile.eof()){
         break;
       }
-      progMem[i] = (uint16_t)strtol(buffer, NULL, 16);
+      progMem[this->progAddr] = (uint16_t)strtol(buffer, NULL, 16);
     }
     return true;
   }
