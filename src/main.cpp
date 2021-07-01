@@ -46,8 +46,25 @@ int menu(){
       uint16_t status = cpu.run(opcode);
       cout << "Operation exited, returning: " << std::setfill('0') << std::setw(2) << status << endl;
     }
+    /*
     if(strcmp(input, "reset")==0){
-      
+
+    }
+    */
+    if(strcmp(input, "load")==0){
+      cout << "ROM> ";
+      char rom[1024] = "";
+      cin.getline(rom, 1024, '\n');
+      bool ldStatus = cpu.load(rom);
+      if(ldStatus){
+        cout << "ROM load successful!" << endl;
+      }else{
+        cerr << "ROM load failed!" << endl;
+      }
+    }
+    if(strcmp(input, "runrom")==0){
+      cout << "Running ROM..." << endl;
+      cpu.exec();
     }
   }
   free(input);
