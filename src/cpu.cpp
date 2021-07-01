@@ -51,20 +51,55 @@ std::uint16_t CPU::interpretInstr(uint8_t opCode, uint8_t arg){
   0x04: gets datMem at arg to accumulator
   0x05: sets accumulator
   0x06: gets accumulator
-  0x07: if arg is 0 reads one input byte into accumulator, else prints accumulator
+  0x07: if arg is 0 reads one input byte into accumulator, if arg is 0xFF prints accumulator
+  0x08: add arg to accumulator
+  0x09: sub arg from accumulator
+  0x0A: store progAddr in datMem[arg](upper nibble) and datMem[arg+1](lower nibble) for loops (only in programs)
+  0x0B: if accumulator != 0 jump to datMem[arg](upper nibble) and datMem[arg+1](lower nibble) (only in programs)
   */
   switch(this->opCode){
-/*
+    case 0xB: {
+      uint16_t tempAddr;
+      tempAddr = (this->datMem[this->instrArg] << 4) | this->datMem[this->instrArg];
+      if(this->accumulator != 0x0){
+        this->progAddr = tempAddr;
+      }
+      return 0x0;
+      break;
+    }
+    case 0xA: {
+      std::strstream split;
+      split << std::setfill('0') << std::setw(4) << this->progAddr;
+      char uNibble[8];
+      char lNibble[8];
+      strncpy(uNibble, split.str(), 2);
+      strncpy(lNibble, split.str()+2, 2);
+      this->datMem[this->instrArg] = (uint8_t)strtol(uNibble, NULL, 16);
+      this->datMem[this->instrArg+1] = (uint8_t)strtol(lNibble, NULL, 16);
+      return 0x0;
+      break;
+    }
+    case 0x9:
+      this->accumulator -= this->instrArg;
+      return this->accumulator;
+      break;
+    case 0x8:
+      this->accumulator += this->instrArg;
+      return this->accumulator;
+      break;
     case 0x7:
       if(this->instrArg == 0x0){
-        char buffer[8];
-        cin.get(buffer, 1);
-        this->accumulator = buffer;
-        return this->accumulator;
+        this->in();
+        return 0x0;
+        break;
+      }else if(this->instrArg == 0xFF){
+        this->out();
+        return 0xFF;
         break;
       }else{
-
-      }*/
+        return 0x1;
+        break;
+      }
     case 0x6:
       return this->accumulator;
       break;
@@ -125,4 +160,14 @@ void CPU::exec(){
       break;
     }
   }
+}
+
+void CPU::in(){
+  char buffer[8];
+  std::cin.get(buffer, 1);
+  this->accumulator = buffer[0];
+}
+
+void CPU::out(){
+  std::cout.put(this->accumulator);
 }

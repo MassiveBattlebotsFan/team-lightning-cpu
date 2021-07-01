@@ -44,7 +44,7 @@ int menu(){
       opcode = (uint16_t)strtol(input, NULL, 16);
       cout << "Starting operation..." << endl;
       uint16_t status = cpu.run(opcode);
-      cout << "Operation exited, returning: " << std::setfill('0') << std::setw(2) << status << endl;
+      cout << "Operation exited, returning: 0x" << std::setfill('0') << std::setw(2) << status << endl;
     }
     /*
     if(strcmp(input, "reset")==0){
@@ -65,6 +65,7 @@ int menu(){
     if(strcmp(input, "runrom")==0){
       cout << "Running ROM..." << endl;
       cpu.exec();
+      cout << "Finished execution of ROM." << endl;
     }
   }
   free(input);

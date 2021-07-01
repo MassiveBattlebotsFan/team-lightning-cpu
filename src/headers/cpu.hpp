@@ -14,8 +14,8 @@ class CPU{
     std::uint8_t datMem[256];
     std::uint16_t progMem[0x10000]; //this is 12 bits wide
     std::uint16_t progAddr;
-    std::uint8_t out();
-    std::uint8_t in();
+    void out();
+    void in();
     //interpreter is protected b/c easy to misformat
     std::uint16_t interpretInstr(uint8_t opCode, uint8_t arg);
   public:
