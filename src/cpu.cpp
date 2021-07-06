@@ -7,26 +7,25 @@
 #include <cstdio>
 #include <cstdlib>
 #include <bitset>
+#include <map>
+#include <functional>
 
 #include "headers/cpu.hpp"
 
-CPU::CPU(){
+BaseCPU::BaseCPU(){
   this->opCode = 0x0;
   this->accumulator = 0x0;
   this->instrArg = 0x0;
   for(uint8_t i = 0; i < 255; i++){
     this->datMem[i] = 0x0;
   }
-
   for(uint16_t i = 0; i < 0xFFF; i++){
-    this->progMem[i] = 0x0;
+    this->romBuffer[i] = 0x0;
   }
-  this->progAddr = 0x0;
+  this->romAddr = 0x0;
 }
 
-std::uint16_t CPU::getAccum(){return this->accumulator;}
-
-std::uint16_t CPU::run(uint16_t instruction){
+std::uint16_t BaseCPU::run(uint16_t instruction){
   std::strstream formattedInstr;
   formattedInstr << std::hex << std::setfill('0') << std::setw(4) << instruction;
   //std::cerr << formattedInstr.str() << std::endl;
@@ -39,30 +38,30 @@ std::uint16_t CPU::run(uint16_t instruction){
   return this->interpretInstr(formattedOpcode, formattedArg);
 }
 
-std::uint16_t CPU::interpretInstr(uint8_t opCode, uint8_t arg){
+std::uint16_t BaseCPU::interpretInstr(uint8_t opCode, uint8_t arg){
   this->opCode = opCode;
   this->instrArg = arg;
   /*
   opcodes [TEMP]:
   0x00/invalid: returns the opcode, basically no operation
-  0x01: sets progAddr to arg
-  0x02: gets progAddr to accumulator
+  0x01: sets romAddr to arg
+  0x02: gets romAddr to accumulator
   0x03: sets datMem at arg to accumulator
   0x04: gets datMem at arg to accumulator
   0x05: sets accumulator
   0x06: gets accumulator
-  0x07: if arg is 0 reads one input byte into accumulator, if arg is 0xFF prints accumulator
+  0x07: does nothing
   0x08: add arg to accumulator
   0x09: sub arg from accumulator
-  0x0A: store progAddr in datMem[arg](upper nibble) and datMem[arg+1](lower nibble) for loops (only in programs)
+  0x0A: store romAddr in datMem[arg] for loops (only in programs)
   0x0B: if accumulator != 0 jump to datMem[arg](upper nibble) and datMem[arg+1](lower nibble) (only in programs)
   */
   switch(this->opCode){
-    case 0xB: {
+    /*case 0xB: {
       uint16_t tempAddr;
       tempAddr = (this->datMem[this->instrArg] << 4) | this->datMem[this->instrArg];
       if(this->accumulator != 0x0){
-        this->progAddr = tempAddr;
+        this->romAddr = tempAddr;
       }
       return 0x0;
       break;
@@ -70,15 +69,10 @@ std::uint16_t CPU::interpretInstr(uint8_t opCode, uint8_t arg){
     case 0xA: {
       std::strstream split;
       split << std::setfill('0') << std::setw(4) << this->progAddr;
-      char uNibble[8];
-      char lNibble[8];
-      strncpy(uNibble, split.str(), 2);
-      strncpy(lNibble, split.str()+2, 2);
-      this->datMem[this->instrArg] = (uint8_t)strtol(uNibble, NULL, 16);
-      this->datMem[this->instrArg+1] = (uint8_t)strtol(lNibble, NULL, 16);
+      this->datMem[this->instrArg] = (uint16_t)strtol(split.str(), NULL, 16);
       return 0x0;
       break;
-    }
+    }*/
     case 0x9:
       this->accumulator -= this->instrArg;
       return this->accumulator;
@@ -88,18 +82,8 @@ std::uint16_t CPU::interpretInstr(uint8_t opCode, uint8_t arg){
       return this->accumulator;
       break;
     case 0x7:
-      if(this->instrArg == 0x0){
-        this->in();
-        return 0x0;
-        break;
-      }else if(this->instrArg == 0xFF){
-        this->out();
-        return 0xFF;
-        break;
-      }else{
-        return 0x1;
-        break;
-      }
+      return 0x0;
+      break;
     case 0x6:
       return this->accumulator;
       break;
@@ -115,11 +99,11 @@ std::uint16_t CPU::interpretInstr(uint8_t opCode, uint8_t arg){
       return this->accumulator;
       break;
     case 0x2:
-      return this->progAddr;
+      return this->romAddr;
       break;
     case 0x1:
-      this->progAddr = this->instrArg;
-      return this->progAddr;
+      this->romAddr = this->instrArg;
+      return this->romAddr;
       break;
     case 0x0:
       return 0x9999;
@@ -131,21 +115,21 @@ std::uint16_t CPU::interpretInstr(uint8_t opCode, uint8_t arg){
   return this->opCode;
 }
 
-bool CPU::load(char fname[1024]){
+bool BaseCPU::attach(char fname[1024]){
   std::ifstream ifile;
-  char buffer[0x10000];
+  char buffer[0xFF];
   ifile.open(fname);
   if(ifile.good()){
-    uint16_t i = this->progAddr;
-    for(this->progAddr; this->progAddr < 0x10000; this->progAddr++){
-      ifile.getline(buffer, 0xFFF, ';');
+    uint16_t i = this->romAddr;
+    for(this->romAddr; this->romAddr < 0x10000; this->romAddr++){
+      ifile.getline(buffer, 0xFF, ';');
       std::cerr << buffer << std::endl;
       if(ifile.eof()){
         break;
       }
-      progMem[this->progAddr] = (uint16_t)strtol(buffer, NULL, 16);
+      this->romBuffer[this->romAddr] = (uint16_t)strtol(buffer, NULL, 16);
     }
-    this->progAddr = i;
+    this->romAddr = i;
     return true;
   }
   else{
@@ -153,27 +137,26 @@ bool CPU::load(char fname[1024]){
   }
 }
 
-void CPU::exec(){
+void BaseCPU::load(uint16_t offset){
+  for(uint16_t i = offset; i < 0x1FFF - offset; i++){
+    this->datMem[i] = this->romBuffer[i];
+    if(this->romBuffer[i] == 0x0000){
+      break;
+    }
+  }
+}
+/*
+void BaseCPU::exec(){
   uint16_t ret;
   for(this->progAddr; this->progAddr < 0xFF; this->progAddr++){
-    //std::cerr << std::hex << std::setfill('0') << std::setw(4) << (uint16_t)this->progMem[this->progAddr] << std::endl; //error checking data laod
+    //std::cerr << std::hex << std::setfill('0') << std::setw(4) << (uint16_t)this->progMem[this->progAddr] << std::endl; //error checking data load
     ret = this->run(this->progMem[this->progAddr]);
     if(ret == 0x9999){
       break;
     }
   }
 }
-
-void CPU::in(){
-  char buffer[8];
-  std::cin.get(buffer, 1);
-  this->accumulator = buffer[0];
-}
-
-void CPU::out(){
-  std::cout.put(this->accumulator);
-}
-
-uint16_t* CPU::romdump(){
-  return this->progMem;
+*/
+uint16_t* BaseCPU::romdump(){
+  return this->romBuffer;
 }

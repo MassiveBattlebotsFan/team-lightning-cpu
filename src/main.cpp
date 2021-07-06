@@ -24,16 +24,16 @@ IE: 0x0E0F
 using namespace std;
 
 int menu(){
-  CPU cpu; //starts the vCPU
+  BaseCPU cpu; //starts the vCPU
   char* input;
   input = new char[2048];
   while(true){
     cout << "PL2> ";
     cin.getline(input, 2048, '\n');
     //cout << input << endl;
-    if(strcmp(input, "status")==0){
+    /*if(strcmp(input, "status")==0){
       cout << "Accumulator: 0x" << std::setfill('0') << std::setw(2) << cpu.getAccum() << endl;
-    }
+    }*/
     if(strcmp(input, "exit")==0){
       break;
     }
@@ -51,22 +51,22 @@ int menu(){
 
     }
     */
-    if(strcmp(input, "load")==0){
+    if(strcmp(input, "attach")==0){
       cout << "ROM> ";
       char rom[1024] = "";
       cin.getline(rom, 1024, '\n');
-      bool ldStatus = cpu.load(rom);
+      bool ldStatus = cpu.attach(rom);
       if(ldStatus){
         cout << "ROM load successful!" << endl;
       }else{
         cerr << "ROM load failed!" << endl;
       }
     }
-    if(strcmp(input, "runrom")==0){
+    /*if(strcmp(input, "runrom")==0){
       cout << "Running ROM..." << endl;
       cpu.exec();
       cout << "Finished execution of ROM." << endl;
-    }
+    }*/
     if(strcmp(input, "rom")==0){
       uint16_t* pMem = cpu.romdump();
       for(uint16_t i = 0; i < 0x10000; i++){
