@@ -12,17 +12,22 @@
 
 #include "headers/cpu.hpp"
 
+#define UINT24_MAX (4095)
+#define UINT_LEAST24_MAX (4095)
+
 BaseCPU::BaseCPU(){
   this->opCode = 0x0;
   this->accumulator = 0x0;
   this->instrArg = 0x0;
-  for(uint8_t i = 0; i < 255; i++){
+  for(uint16_t i = 0; i < 0x1FFF; i++){
     this->datMem[i] = 0x0;
   }
-  for(uint16_t i = 0; i < 0xFFF; i++){
+  for(uint16_t i = 0; i < 0xFFFF; i++){
     this->romBuffer[i] = 0x0;
   }
   this->romAddr = 0x0;
+  this->execAddr = 0x0;
+  this->datAddr = 0x0;
 }
 
 std::uint16_t BaseCPU::run(uint16_t instruction){
@@ -46,44 +51,54 @@ std::uint16_t BaseCPU::interpretInstr(uint8_t opCode, uint8_t arg){
   0x00/invalid: returns the opcode, basically no operation
   0x01: sets romAddr to arg
   0x02: gets romAddr to accumulator
-  0x03: sets datMem at arg to accumulator
-  0x04: gets datMem at arg to accumulator
+  0x03: sets datMem at datAddr to accumulator
+  0x04: gets datMem at datAddr to accumulator
   0x05: sets accumulator
   0x06: gets accumulator
-  0x07: does nothing
-  0x08: add arg to accumulator
-  0x09: sub arg from accumulator
-  0x0A: store romAddr in datMem[arg] for loops (only in programs)
-  0x0B: if accumulator != 0 jump to datMem[arg](upper nibble) and datMem[arg+1](lower nibble) (only in programs)
+  0x07: sets lower byte of datAddr to instrArg
+  0x08: sets upper byte of datAddr to instrArg
+  0x09: add arg to accumulator
+  0x0A: sub arg from accumulator
+  0x0B: store romAddr in datMem[arg] for loops (only in programs)
+  0x0C: if accumulator != 0 jump to datMem[arg](upper nibble) and datMem[arg+1](lower nibble) (only in programs)
   */
   switch(this->opCode){
-    /*case 0xB: {
-      uint16_t tempAddr;
-      tempAddr = (this->datMem[this->instrArg] << 4) | this->datMem[this->instrArg];
+    case 0xC: {
       if(this->accumulator != 0x0){
-        this->romAddr = tempAddr;
+        this->execAddr = this->datMem[this->datAddr];
       }
       return 0x0;
       break;
     }
-    case 0xA: {
-      std::strstream split;
-      split << std::setfill('0') << std::setw(4) << this->progAddr;
-      this->datMem[this->instrArg] = (uint16_t)strtol(split.str(), NULL, 16);
+    case 0xB: {
+      this->datMem[this->datAddr] = this->execAddr;
       return 0x0;
       break;
-    }*/
-    case 0x9:
+    }
+    case 0xA:
       this->accumulator -= this->instrArg;
       return this->accumulator;
       break;
-    case 0x8:
+    case 0x9:
       this->accumulator += this->instrArg;
       return this->accumulator;
       break;
-    case 0x7:
-      return 0x0;
+    case 0x8: {
+      if(this->instrArg <= 0x1F){
+        uint8_t temp = (this->datAddr & 0b00001111);
+        this->datAddr = (this->instrArg << 8) | temp;
+        return this->instrArg;
+      }else{
+        return 0xFFFF;
+      }
       break;
+    }
+    case 0x7: {
+      uint8_t temp = (this->datAddr >> 8);
+      this->datAddr = (temp << 8) | this->instrArg;
+      return this->instrArg;
+      break;
+    }
     case 0x6:
       return this->accumulator;
       break;
