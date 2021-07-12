@@ -10,11 +10,10 @@ class BaseCPU{
   */
   protected:
     //these should be accessible by addon modules
-    std::uint16_t accumulator;
     std::uint16_t datReg;
     std::uint16_t datMem[0x2000]; //8k 2 byte words
     std::uint16_t datAddr;
-    std::map<uint8_t, std::function<void()>> opCodes[0x100];
+    std::map<uint8_t, std::function<void()>> opCodes;
   private:
     //opcode reg, instr reg, and ROM buffer for loaded files
     std::uint8_t opCode;
@@ -22,8 +21,10 @@ class BaseCPU{
     std::uint16_t romBuffer[0x10000]; //this is 16 bits wide
     std::uint16_t romAddr;
     std::uint16_t execAddr;
+    //accumulator private b/c datAddr
+    std::uint16_t accumulator;
     //interpreter doesn't need to be accessed by addons
-    std::uint16_t interpretInstr(uint8_t opCode, uint16_t arg);
+    std::uint32_t interpretInstr(uint8_t opCode, uint16_t arg);
   public:
     BaseCPU();
     std::uint16_t* romdump();

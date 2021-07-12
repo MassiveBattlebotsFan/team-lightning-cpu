@@ -1,5 +1,4 @@
 #include <cstdint>
-#include <strstream>
 #include <iomanip>
 #include <iostream>
 #include <cstring>
@@ -29,19 +28,19 @@ BaseCPU::BaseCPU(){
 }
 
 uint16_t BaseCPU::run(uint32_t instruction){
-  std::strstream formattedInstr;
+  std::stringstream formattedInstr;
   formattedInstr << std::hex << std::setfill('0') << std::setw(6) << instruction;
   //std::cerr << formattedInstr.str() << std::endl;
   char fOpcode1[16];
-  strncpy(fOpcode1, formattedInstr.str(), 2);
+  strncpy(fOpcode1, formattedInstr.str().c_str(), 2);
   char fArg1[16];
-  strncpy(fArg1, formattedInstr.str() + 2, 4);
+  strncpy(fArg1, formattedInstr.str().c_str() + 2, 4);
   std::uint8_t formattedOpcode = (uint8_t)strtol(fOpcode1, NULL, 16);
   std::uint16_t formattedArg = (uint16_t)strtol(fArg1, NULL, 16);
   return this->interpretInstr(formattedOpcode, formattedArg);
 }
 
-std::uint16_t BaseCPU::interpretInstr(uint8_t opCode, uint16_t arg){
+std::uint32_t BaseCPU::interpretInstr(uint8_t opCode, uint16_t arg){
   this->opCode = opCode;
   this->instrArg = arg;
   /*
@@ -136,10 +135,14 @@ std::uint16_t BaseCPU::interpretInstr(uint8_t opCode, uint16_t arg){
       return 0x0;
       break;
     case 0x0:
-      return 0x9999;
+      return 0x99999999;
       break;
     default:
-      return 0x0;
+      for(auto pair : this->opCodes){
+        if(this->opCode == pair.first){
+          pair.second();
+        }
+      }
       break;
   }
   return this->opCode;
@@ -184,11 +187,11 @@ void BaseCPU::load(uint16_t offset){
 }
 
 void BaseCPU::exec(){
-  uint16_t ret;
+  uint32_t ret;
   for(this->execAddr; this->execAddr < 0x1FFF; this->execAddr+=2){
     //std::cerr << std::hex << std::setfill('0') << std::setw(2) << (uint16_t)this->datMem[this->execAddr] << std::setw(4) << (uint16_t)this->datMem[this->execAddr+1] << std::endl; //error checking data load
     ret = this->interpretInstr((this->datMem[this->execAddr]&0b0000000011111111), this->datMem[this->execAddr+1]);
-    if(ret == 0x9999){
+    if(ret == 0x99999999){
       break;
     }
   }

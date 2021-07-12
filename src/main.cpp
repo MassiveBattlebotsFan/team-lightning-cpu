@@ -44,7 +44,7 @@ int menu(){
       opcode = (uint32_t)strtol(input, NULL, 16);
       cout << "Starting operation..." << endl;
       uint16_t status = cpu.run(opcode);
-      cout << "Operation exited, returning: 0x" << std::setfill('0') << std::setw(2) << status << endl;
+      cout << "Operation exited, returning: 0x" << std::setfill('0') << std::setw(4) << status << endl;
     }
     /*
     if(strcmp(input, "reset")==0){
