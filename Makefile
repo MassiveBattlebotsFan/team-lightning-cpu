@@ -1,7 +1,7 @@
 BUILD = build
 SRC = src
 HEADERS = $(SRC)/headers
-CXXFLAGS = -std=c++17
+CXXFLAGS = -std=c++2a
 ifeq ($(OS), Windows_NT)
 	EXECUTABLE=main.exe
 else
