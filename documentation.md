@@ -17,7 +17,7 @@
 0x0F: get romBuffer[romAddr] to datReg  
 
 # Extending the BaseCPU:
-Extension modules have access to BaseCPU::datReg, BaseCPU::datMem, and BaseCPU::datAddr.    
+Extension modules have access to BaseCPU::datReg, BaseCPU::datMem, BaseCPU::instrArg, and BaseCPU::datAddr.    
 A typical extension looks like this, where `OPCODE` is the opcode used to run a module:    
 <pre><code>class ExtendedCPU() : public BaseCPU(){    
   protected:    
@@ -25,7 +25,7 @@ A typical extension looks like this, where `OPCODE` is the opcode used to run a 
       //do stuff    
     }   
   ExtendedCPU() : BaseCPU(){    
-    this->opCodes = {{(uint8_t)YOUR_OPCODE, std::bind(&ExtendedCPU::ExampleModule, this)}}; 
+    this->opCodes = {{(uint8_t)YOUR_OPCODE, std::bind(&ExtendedCPU::ExampleModule, this)}};
     //above binds opcode to function for execution by the CPU     
   }    
 };</code></pre>

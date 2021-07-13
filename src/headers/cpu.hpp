@@ -13,11 +13,11 @@ class BaseCPU{
     std::uint16_t datReg;
     std::uint16_t datMem[0x2000]; //8k 2 byte words
     std::uint16_t datAddr;
+    std::uint16_t instrArg;
     std::map<uint8_t, std::function<void(void)>> opCodes;
   private:
     //opcode reg, instr reg, and ROM buffer for loaded files
     std::uint8_t opCode;
-    std::uint16_t instrArg;
     std::uint16_t romBuffer[0x10000]; //this is 16 bits wide
     std::uint16_t romAddr;
     std::uint16_t execAddr;
