@@ -204,7 +204,7 @@ uint16_t* BaseCPU::romdump(){
   return this->romBuffer;
 }
 
-bool BaseCPU::detach(){
+void BaseCPU::detach(){
   for(uint16_t i = 0; i < 0xFFFF; i++){
     this->romBuffer[i] = 0x0;
   }
