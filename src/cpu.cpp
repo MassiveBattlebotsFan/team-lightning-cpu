@@ -119,11 +119,11 @@ std::uint32_t BaseCPU::interpretInstr(uint8_t opCode, uint16_t arg){
       return this->instrArg;
       break;
     case 0x4:
-      this->datReg = this->datMem[this->instrArg];
+      this->datReg = this->datMem[this->datAddr];
       return 0x0;
       break;
     case 0x3:
-      this->datMem[this->instrArg] = this->datReg;
+      this->datMem[this->datAddr] = this->datReg;
       return 0x0;
       break;
     case 0x2:

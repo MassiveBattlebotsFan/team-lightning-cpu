@@ -92,7 +92,7 @@ int menu(){
     if(strcmp(input, "runrom")==0){
       cout << "Running ROM..." << endl;
       cpu.exec();
-      cout << "Finished execution of ROM." << endl;
+      cout << "\nFinished execution of ROM." << endl;
     }
     if(strcmp(input, "rom")==0){
       uint16_t* pMem = cpu.romdump();
@@ -103,6 +103,11 @@ int menu(){
         }
         cout << std::setfill('0') << std::setw(2) << pMem[i] << ',' << std::setw(4) << pMem[i+1] << endl;
       }
+    }
+    if(strcmp(input, "detach")==0){
+      cout << "Detaching ROM..." << endl;
+      cpu.detach();
+      cout << "Detached ROM." << endl;
     }
   }
   free(input);
