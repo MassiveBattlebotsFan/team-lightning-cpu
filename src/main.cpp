@@ -23,8 +23,27 @@ IE: 0x0E0F
 #include "headers/cpu.hpp"
 using namespace std;
 
+class IOCPU : public BaseCPU{
+protected:
+  void io_out(){
+    cout << (uint8_t)this->datReg;
+  }
+  void io_in(){
+    char* temp = new char[2];
+    uint16_t i = 0;
+    while(cin.getline(temp, 1, '\n')){
+      this->datMem[this->datAddr+i] = (uint8_t)temp[0];
+      i++;
+    }
+  }
+
+public:
+  IOCPU() : BaseCPU() {
+    this->opCodes = {{(uint8_t)0x10, std::bind(&IOCPU::io_out, this)}, {(uint8_t)0x11, std::bind(&IOCPU::io_in, this)}};
+  }
+};
 int menu(){
-  BaseCPU cpu; //starts the vCPU
+  IOCPU cpu; //starts the vCPU
   char* input;
   input = new char[2048];
   while(true){
@@ -44,7 +63,7 @@ int menu(){
       opcode = (uint32_t)strtol(input, NULL, 16);
       cout << "Starting operation..." << endl;
       uint16_t status = cpu.run(opcode);
-      cout << "Operation exited, returning: 0x" << std::setfill('0') << std::setw(4) << status << endl;
+      cout << "\nOperation exited, returning: 0x" << std::setfill('0') << std::setw(4) << status << endl;
     }
     /*
     if(strcmp(input, "reset")==0){
