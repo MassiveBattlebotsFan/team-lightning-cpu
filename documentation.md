@@ -1,4 +1,4 @@
-#opcodes [TEMP]:  
+# opcodes [TEMP]:  
 0x00: returns 0x9999, used for prog termination
 0x01: sets romAddr to instrArg  
 0x02: gets romAddr to datReg  
