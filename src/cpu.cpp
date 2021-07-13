@@ -153,6 +153,9 @@ bool BaseCPU::attach(char fname[1024]){
   char buffer[0xFF];
   ifile.open(fname);
   if(ifile.good()){
+    for(uint16_t i = 0; i < 0xFFFF; i++){
+      this->romBuffer[i] = 0x0;
+    }
     uint16_t i = this->romAddr;
     for(this->romAddr; this->romAddr < 0x10000; this->romAddr+=2){
       std::stringstream split;
@@ -199,4 +202,10 @@ void BaseCPU::exec(){
 
 uint16_t* BaseCPU::romdump(){
   return this->romBuffer;
+}
+
+bool BaseCPU::detach(){
+  for(uint16_t i = 0; i < 0xFFFF; i++){
+    this->romBuffer[i] = 0x0;
+  }
 }

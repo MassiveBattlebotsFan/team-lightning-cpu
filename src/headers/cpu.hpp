@@ -31,6 +31,7 @@ class BaseCPU{
     std::uint16_t run(uint32_t instruction);
     void exec(); //this runs ROMcode, not the same as CPU::run()
     bool attach(char fname[1024]);
+    bool detach();
     void load(uint16_t offset);
 };
 
