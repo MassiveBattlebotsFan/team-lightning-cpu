@@ -13,17 +13,11 @@ IE: 0x0E0F
 */
 #include <cstdio>
 #include <cstdlib>
-#include <cstdint>
 #include <iostream>
-#include <fstream>
 #include <iomanip>
-#include <string>
-#include <cstring>
-#include <sstream>
+
 #include "headers/menu.hpp"
 using namespace std;
-
-
 
 int main(int numArgs, char* args[]){
   //init cout to run in hex mode
