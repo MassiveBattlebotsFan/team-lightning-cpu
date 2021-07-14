@@ -1,4 +1,4 @@
-# Current opcodes [TEMP]:  
+# Current BaseCPU opcodes [TEMP]:  
 0x00: returns 0x99999999, used for prog termination   
 0x01: sets romAddr to instrArg  
 0x02: gets romAddr to datReg  
@@ -31,4 +31,4 @@ A typical extension looks like this, where `OPCODE` is the opcode used to run a 
 };</code></pre>
 
 # Using extended CPUs with the PL2 control menu   
-To use an extended CPU with the PL2 control menu (`menu.cpp`, `headers\menu.hpp`), edit the [cpu.cpp](cpu.cpp) and [cpu.hpp](headers/cpu.hpp) files to add modules you need.
+To use an extended CPU with the PL2 control menu ([menu.cpp](menu.cpp), [menu.hpp](headers\menu.hpp)), edit the [cpu.cpp](cpu.cpp) and [cpu.hpp](headers/cpu.hpp) files to add modules you need.
