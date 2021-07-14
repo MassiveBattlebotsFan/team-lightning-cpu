@@ -1,5 +1,5 @@
 #include <iostream>
-#include "headers/io_cpu.hpp"
+#include "headers/cpu.hpp"
 
 void CPU::io_out(){
   std::cout << (uint8_t)this->datReg;

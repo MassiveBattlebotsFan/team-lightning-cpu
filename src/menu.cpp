@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <cstring>
 #include "headers/menu.hpp"
-#include "headers/io_cpu.hpp"
+#include "headers/cpu.hpp"
 
 using namespace std;
 
