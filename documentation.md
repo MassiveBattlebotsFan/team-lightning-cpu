@@ -29,3 +29,6 @@ A typical extension looks like this, where `OPCODE` is the opcode used to run a 
     //above binds opcode to function for execution by the CPU     
   }    
 };</code></pre>
+
+# Using extended CPUs with the PL2 control menu   
+To use an extended CPU with the PL2 control menu (`menu.cpp`, `headers\menu.hpp`), edit the [cpu.cpp](cpu.cpp) and [cpu.hpp](headers/cpu.hpp) files to add modules you need.
