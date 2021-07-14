@@ -9,7 +9,7 @@
 #include <map>
 #include <functional>
 
-#include "headers/cpu.hpp"
+#include "headers/base_cpu.hpp"
 
 BaseCPU::BaseCPU(){
   this->opCode = 0x0;
