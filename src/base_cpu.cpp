@@ -46,7 +46,7 @@ std::uint32_t BaseCPU::interpretInstr(uint8_t opCode, uint16_t arg){
   /*
   opcodes [TEMP]:
   0x00: returns 0x9999, used for prog termination
-  0x01: sets romAddr to instrArg
+  0x01: sets romAddr to datReg
   0x02: gets romAddr to datReg
   0x03: sets datMem at datAddr to datReg
   0x04: gets datMem at datAddr to datReg
@@ -131,7 +131,7 @@ std::uint32_t BaseCPU::interpretInstr(uint8_t opCode, uint16_t arg){
       return 0x0;
       break;
     case 0x1:
-      this->romAddr = this->instrArg;
+      this->romAddr = this->datReg;
       return 0x0;
       break;
     case 0x0:

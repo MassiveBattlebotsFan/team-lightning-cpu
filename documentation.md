@@ -1,6 +1,6 @@
 # Current BaseCPU opcodes [TEMP]:  
 0x00: returns 0x99999999, used for prog termination   
-0x01: sets romAddr to instrArg  
+0x01: sets romAddr to datReg
 0x02: gets romAddr to datReg  
 0x03: sets datMem at datAddr to datReg  
 0x04: gets datMem at datAddr to datReg  
