@@ -24,7 +24,7 @@ int main(int argc, char const *argv[]) {
       outfile = infile + 'c';
     }
     ifstream opcodesIn;
-    opcodesIn.open("opcodes.db");
+    opcodesIn.open("./opcodes.db");
     if(opcodesIn.bad()){
       throw("opcodes.db not found.");
     }
@@ -35,7 +35,8 @@ int main(int argc, char const *argv[]) {
         if(opcodesIn.bad()){
           throw("opcodes.db read stream broke");
         }
-        throw("opcodes.db read loop breaking, " +  strerror(errno));
+        char temp[] = "opcodes.db read loop breaking, ";
+        throw(strcat(temp, strerror(errno)));
         cerr << buffer1 << endl;
         break;
       }
