@@ -1,5 +1,5 @@
 BUILD = build
-CPU_SRC = src
+CPU_SRC = cpu_src
 ASM_SRC = pl2_assembler
 HEADERS = $(CPU_SRC)/headers
 CXXFLAGS = -std=c++2a
