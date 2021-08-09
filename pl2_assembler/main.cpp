@@ -14,10 +14,10 @@ int main(int argc, char const *argv[]) {
   try{
     //init logging to file
     ofstream logging("pl2asm.log");
-    //auto old_rdbuf = clog.rdbuf(); // not implemented
+    auto old_rdbuf = clog.rdbuf(); // not implemented
     clog.rdbuf(logging.rdbuf());
 
-    std::map<char*, uint16_t> opcodes = {};
+    std::map<string, uint16_t> opcodes = {};
     string opcodesDb = "opcodes.db";
     if(argc == 1){
       cerr << "Usage: " << argv[0] << " <source.pl2> [opcodes.db]" << endl;
@@ -54,7 +54,7 @@ int main(int argc, char const *argv[]) {
       parser.getline(buffer2, 4096, '=');
       parser.getline(buffer3, 4096, '\0');
       clog << buffer2 << ", " << buffer3 << endl;
-      opcodes.insert({buffer3, (uint16_t)strtol(buffer2, NULL, 16)});
+      opcodes[buffer3] = (uint16_t)strtol(buffer2, NULL, 16);
     }
     opcodesIn.close();
     ifstream asmIn(infile.c_str());
@@ -66,7 +66,8 @@ int main(int argc, char const *argv[]) {
       throw("Assembled output file open failed");
     }
     uint16_t instrArgOut = 0x0;
-    uint8_t opCodeOut = 0x0;
+    uint16_t opCodeOut = 0x0;
+
     while(asmIn.getline(buffer1, 4096, '\n')){
       parser.str("");
       if(asmIn.fail()){
@@ -79,10 +80,10 @@ int main(int argc, char const *argv[]) {
       parser.getline(buffer2, 4096, ':');
       parser.getline(buffer3, 4096, '\0');
       instrArgOut = (uint16_t)strtol(buffer3, NULL, 16);
-      cerr << buffer2 << endl;
-      cerr << std::hex << std::setfill('0') << std::setw(2) << opcodes[buffer2];
-      asmOut << std::hex << std::setfill('0') << std::setw(2) << opcodes[buffer2];
-      cerr << std::hex << std::setfill('0') << ',' << std::setw(4) << instrArgOut << ';' << endl;
+      opCodeOut = opcodes[buffer2];
+      clog << std::hex << std::setfill('0') << std::setw(2) << opCodeOut;
+      asmOut << std::hex << std::setfill('0') << std::setw(2) << opCodeOut;
+      clog << std::hex << std::setfill('0') << ',' << std::setw(4) << instrArgOut << ';' << endl;
       asmOut << std::hex << std::setfill('0') << ',' << std::setw(4) << instrArgOut << ';';
     }
     asmIn.close();
