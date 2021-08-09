@@ -1,4 +1,23 @@
-# Current BaseCPU opcodes [TEMP]:  
+# Assembly commands:  
+Syntax: `CMD:[4 digit hex arg]`  
+0x00=HLT  
+0x01=SRA  
+0x02=GRA  
+0x03=SDM  
+0x04=GDM  
+0x05=SAI  
+0x06=GEA  
+0x07=SDA  
+0x08=GDA  
+0x09=ADD  
+0x0A=SUB  
+0x0B=SWP  
+0x0C=SED  
+0x0D=JNZ  
+0x0E=JMP  
+0x0F=GRD  
+
+# Current BaseCPU opcodes:  
 0x00: returns 0x99999999, used for prog termination   
 0x01: sets romAddr to datReg
 0x02: gets romAddr to datReg  

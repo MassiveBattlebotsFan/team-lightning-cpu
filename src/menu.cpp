@@ -10,6 +10,7 @@ int menu(){
   CPU cpu; //starts the vCPU
   char* input;
   input = new char[2048];
+  cout << std::hex;
   while(true){
     cout << "PL2> ";
     cin.getline(input, 2048, '\n');
