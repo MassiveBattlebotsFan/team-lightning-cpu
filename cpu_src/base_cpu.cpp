@@ -166,7 +166,7 @@ bool BaseCPU::attach(char fname[1024]){
       }
       split << buffer;
       char split1[256], split2[256];
-      split.getline(split1, 3, ',');
+      split.getline(split1, 5, ';');
       split.getline(split2, 5);
       this->romBuffer[this->romAddr] = (uint16_t)strtol(split1, NULL, 16);
       this->romBuffer[this->romAddr + 1] = (uint16_t)strtol(split2, NULL, 16);
