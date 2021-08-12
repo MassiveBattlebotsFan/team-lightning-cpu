@@ -20,6 +20,7 @@ class BaseCPU{
     std::uint8_t opCode;
     std::uint16_t romBuffer[0x10000]; //this is 16 bits wide
     std::uint16_t romAddr;
+    std::bool romWriteable;
     std::uint16_t execAddr;
     //accumulator private b/c datAddr
     std::uint16_t accumulator;
