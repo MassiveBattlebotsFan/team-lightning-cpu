@@ -1,5 +1,6 @@
 # PL2 vCPU    
 This is the home of my experimental C++ virtual CPU.    
+See [main](../../tree/main) for a version that "works."  
 See [documentation.md](documentation.md) for opcodes and instructions for extending the CPU.
 
 ## Building   
