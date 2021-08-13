@@ -97,10 +97,10 @@ int main(int argc, char const *argv[]) {
       parser.getline(buffer3, 4096, '\0');
       instrArgOut = (uint16_t)strtol(buffer3, NULL, 16);
       opCodeOut = opcodes[buffer2];
-      clog << std::hex << std::setfill('0') << std::setw(4) << opCodeOut;
-      asmOut << std::hex << std::setfill('0') << std::setw(4) << opCodeOut;
-      clog << std::hex << std::setfill('0') << ';' << std::setw(4) << instrArgOut << ';' << endl;
-      asmOut << std::hex << std::setfill('0') << ';' << std::setw(4) << instrArgOut << ';';
+      clog << std::hex << std::setfill('0') << std::setw(2) << opCodeOut;
+      asmOut << std::hex << std::setfill('0') << std::setw(2) << opCodeOut;
+      clog << std::hex << std::setfill('0') << ',' << std::setw(4) << instrArgOut << ';' << endl;
+      asmOut << std::hex << std::setfill('0') << ',' << std::setw(4) << instrArgOut << ';';
     }
     asmIn.close();
     asmOut.close();

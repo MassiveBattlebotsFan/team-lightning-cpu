@@ -8,7 +8,7 @@
 #include <bitset>
 #include <map>
 #include <functional>
-
+#include <chrono>
 #include "headers/base_cpu.hpp"
 
 BaseCPU::BaseCPU(){
@@ -166,7 +166,7 @@ bool BaseCPU::attach(char fname[1024]){
       }
       split << buffer;
       char split1[256], split2[256];
-      split.getline(split1, 5, ';');
+      split.getline(split1, 3, ',');
       split.getline(split2, 5);
       this->romBuffer[this->romAddr] = (uint16_t)strtol(split1, NULL, 16);
       this->romBuffer[this->romAddr + 1] = (uint16_t)strtol(split2, NULL, 16);
@@ -191,13 +191,34 @@ void BaseCPU::load(uint16_t offset){
 
 void BaseCPU::exec(){
   uint32_t ret;
+  std::chrono::steady_clock::time_point beginExec = std::chrono::steady_clock::now();
+  long double avgClock = 0.0;
+  int cycles = 0;
   for(this->execAddr; this->execAddr < 0x1FFF; this->execAddr+=2){
+    std::chrono::steady_clock::time_point beginInstr = std::chrono::steady_clock::now();
     //std::cerr << std::hex << std::setfill('0') << std::setw(2) << (uint16_t)this->datMem[this->execAddr] << std::setw(4) << (uint16_t)this->datMem[this->execAddr+1] << std::endl; //error checking data load
     ret = this->interpretInstr((this->datMem[this->execAddr]&0b0000000011111111), this->datMem[this->execAddr+1]);
+    std::chrono::steady_clock::time_point endInstr = std::chrono::steady_clock::now();
+    std::chrono::nanoseconds instrTimeSpan = std::chrono::duration_cast<std::chrono::nanoseconds>(endInstr - beginInstr);
+    while(true){
+      endInstr = std::chrono::steady_clock::now();
+      instrTimeSpan = std::chrono::duration_cast<std::chrono::nanoseconds>(endInstr - beginInstr);
+      if(instrTimeSpan.count()/1000000 >= 0.9){
+        break;
+      }
+    }
+    //std::clog << "\ninstr time: " << instrTimeSpan.count() << " nanoseconds" << std::endl;
+    avgClock += instrTimeSpan.count();
+    cycles++;
     if(ret == 0x99999999){
       break;
     }
   }
+  std::chrono::steady_clock::time_point endExec = std::chrono::steady_clock::now();
+  std::chrono::microseconds instrTimeSpan = std::chrono::duration_cast<std::chrono::microseconds>(endExec - beginExec);
+  std::clog << "\nexec time: " << instrTimeSpan.count() << " microseconds" << std::endl;
+  std::clog << "average instr time: " << (avgClock/cycles)/1000 << " microseconds" << std::endl;
+  std::clog << "average clock speed: " << (1/(avgClock/cycles))*1000000 << " kHz" << std::endl;
 }
 
 uint16_t* BaseCPU::romdump(){
