@@ -1,3 +1,10 @@
+# CPU specifications:  
+For the purposes of these specifications, one word is equal to unsigned two bytes, one byte is equal to eight bits.    
+Clock speed: 1kHz maximum  
+Registers: 1 word datReg, 1 word accumulator, 1 word instrArg, 1 byte opCode  
+Address pointers: 1 word datAddr, 1 word romAddr, 1 word execAddr  
+Memory: 0x2000 word datMem  
+
 # Assembly commands:  
 Syntax: `CMD:[4 digit hex arg]`  
 0x00=HLT  
