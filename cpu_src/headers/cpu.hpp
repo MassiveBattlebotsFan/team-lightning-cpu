@@ -1,7 +1,7 @@
 #ifndef IO_CPU_H
 #define IO_CPU_H
-#include "base_cpu.hpp"
-class CPU : public BaseCPU{
+#include "rom_cpu.hpp"
+class CPU : public RomCPU{
 protected:
   void io_out();
   void io_in();

@@ -13,6 +13,7 @@ void CPU::io_in(){
   }
 }
 
-CPU::CPU() : BaseCPU() {
-  this->opCodes = {{(uint8_t)0x10, std::bind(&CPU::io_out, this)}, {(uint8_t)0x11, std::bind(&CPU::io_in, this)}};
+CPU::CPU() : RomCPU() {
+  this->opCodes[(uint8_t)0x10] = std::bind(&CPU::io_out, this);
+  this->opCodes[(uint8_t)0x11] = std::bind(&CPU::io_in, this);
 }
