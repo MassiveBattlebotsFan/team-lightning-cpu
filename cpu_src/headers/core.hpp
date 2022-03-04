@@ -12,11 +12,14 @@ private:
   PL2_Clock* clock;
   PL2_CPU* cpu;
   std::vector<PL2_Module*> modules;
+  bool isReady;
+  
 public:
   PL2_Core(PL2_CPU& cpu, PL2_Clock& clock);
   void addModule(PL2_Module& module);
   void start();
   void stop();
+  void ready();
 };
 
 #endif
