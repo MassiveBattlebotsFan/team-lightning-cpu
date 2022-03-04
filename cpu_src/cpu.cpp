@@ -11,6 +11,8 @@ void CPU::io_in(){
     this->datMem[this->datAddr+i] = (uint8_t)temp[0];
     i++;
   }
+  delete[] temp;
+  temp = NULL;
 }
 
 CPU::CPU() : RomCPU() {
