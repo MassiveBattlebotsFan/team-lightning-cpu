@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "headers/cpu.hpp"
 
 PL2_CPU::PL2_CPU(){
@@ -85,13 +86,58 @@ void PL2_CPU::run(){
   }
   if(upperOpcode == 0x1){
     if(lowerOpcode == 0x0){
-
+      this->acc += this->mem;
+    }
+    if(lowerOpcode == 0x1){
+      this->acc -= this->mem;
+    }
+    if(lowerOpcode == 0x2){
+      this->acc *= this->mem;
+    }
+    if(lowerOpcode == 0x3){
+      this->acc = (this->mem == 0) ? 0 : (uint16_t)std::floor(this->acc/this->mem)
     }
   }
   if(upperOpcode == 0x2){
-
+    switch(lowerOpcode){
+      case 0x0: this->acc=this->memAddr;break;
+      case 0x1: this->acc=this->mem;break;
+      case 0x2: this->acc=this->romAddr;break;
+      case 0x3: this->acc=this->rom;break;
+      case 0x4: this->acc=this->bus_5;break;
+      case 0x5: this->acc=this->bus_6;break;
+      case 0x6: this->acc=this->bus_7;break;
+      case 0x7: this->acc=this->bus_8;break;
+      case 0x8: this->acc=this->bus_9;break;
+      case 0x9: this->acc=this->bus_10;break;
+      case 0xA: this->acc=this->bus_11;break;
+      case 0xB: this->acc=this->bus_12;break;
+      case 0xC: this->acc=this->bus_13;break;
+      case 0xD: this->acc=this->bus_14;break;
+      case 0xE: this->acc=this->bus_15;break;
+      case 0xF: this->acc=this->bus_16;break;
+      default:break;
+    }
   }
   if(upperOpcode == 0x3){
-
+    switch(lowerOpcode){
+      case 0x0: this->memAddr=this->acc;break;
+      case 0x1: this->mem=this->acc;break;
+      case 0x2: this->romAddr=this->acc;break;
+      case 0x3: this->rom=this->acc;break;
+      case 0x4: this->bus_5=this->acc;break;
+      case 0x5: this->bus_6=this->acc;break;
+      case 0x6: this->bus_7=this->acc;break;
+      case 0x7: this->bus_8=this->acc;break;
+      case 0x8: this->bus_9=this->acc;break;
+      case 0x9: this->bus_10=this->acc;break;
+      case 0xA: this->bus_11=this->acc;break;
+      case 0xB: this->bus_12=this->acc;break;
+      case 0xC: this->bus_13=this->acc;break;
+      case 0xD: this->bus_14=this->acc;break;
+      case 0xE: this->bus_15=this->acc;break;
+      case 0xF: this->bus_16=this->acc;break;
+      default:break;
+    }
   }
 }
