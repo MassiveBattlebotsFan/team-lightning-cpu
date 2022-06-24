@@ -9,12 +9,13 @@ PL2_Core::PL2_Core(PL2_CPU& cpu, PL2_Clock& clock){
 }
 
 void PL2_Core::addModule(PL2_Module& module){
-  module->setCPU(this->cpu);
+  //module->setCPU(this->cpu);
   this->modules.push_back(module);
 }
 
 void PL2_Core::ready(){
   this->clock->setModules(this->modules&);
+  this->clock->ready();
   this->isReady = true;
 }
 

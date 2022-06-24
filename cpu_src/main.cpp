@@ -20,14 +20,14 @@ IE: 0x0E0F
 #include "headers/menu.hpp"
 using namespace std;
 
-int main(int numArgs, char* args[]){
+int main(int argc, char* argv[]){
   //init cout to run in hex mode
   cout << "PL2 vCPU control\nStarting..." << std::hex << endl;
   ofstream log("pl2.log");
   auto rdbuf_bak = clog.rdbuf();
   clog.rdbuf(log.rdbuf());
-  for(int i = 1; i < numArgs; i++){
-    if(strcmp(args[i], "-v")==0){
+  for(int i = 1; i < argc; i++){
+    if(strcmp(argv[i], "-v")==0){
       clog.rdbuf(rdbuf_bak);
       log.close();
     }

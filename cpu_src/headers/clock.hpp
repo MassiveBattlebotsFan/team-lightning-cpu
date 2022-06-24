@@ -14,10 +14,12 @@ private:
   std::chrono::steady_clock::time_point cycleStartTimePoint;
   std::chrono::steady_clock::time_point cycleEndTimePoint;
   PL2_CPU* cpu;
+  bool run;
   //std::vector<PL2_Module*> modules;
 public:
   PL2_Clock();
   void start();
+  void ready();
   //void setModules(std::vector<PL2_Module*>* modulesToSet);
   void stop();
 };

@@ -67,8 +67,8 @@ void PL2_CPU::run(){
       lower opcode: specifies bus
     0x4-0xF: reserved
   */
-  std::uint4_t upperOpcode = (std::uint4_t)((this->rom & 0xF000) >> 12);
-  std::uint4_t lowerOpcode = (std::uint4_t)((this->rom & 0x0F00) >> 8);
+  std::uint8_t upperOpcode = (std::uint8_t)((this->rom & 0xF000) >> 12);
+  std::uint8_t lowerOpcode = (std::uint8_t)((this->rom & 0x0F00) >> 8);
   std::uint8_t arg = (std::uint8_t)(this->rom & 0x00FF);
   if(upperOpcode == 0x0){
     if(lowerOpcode == 0x0){
